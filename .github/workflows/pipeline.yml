@@ -1,0 +1,31 @@
+*(Typing the slashes will automatically create the folders for you. Make sure there is a dot `.` at the very beginning of `github`!)*
+4. **Paste the configuration:** Copy the entire block of text below and paste it into the large text area:
+
+```yaml
+name: Run Data Pipeline
+
+on:
+  workflow_dispatch: # This allows you to run the pipeline manually with a single click
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest # This tells GitHub to spin up a virtual Linux server
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Python environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Python dependencies
+      run: |
+        pip install boto3
+
+    - name: Execute Python Script
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: python upload_data.py
